@@ -1298,7 +1298,7 @@ function showResult(entry) {
   
   const illustHtml = entry.illust ? `
     <div class="result-illust-wrap">
-      <img class="result-illust" src="${entry.illust.data}" alt="${entry.illust.name}">
+      <img class="result-illust" src="${entry.illust.data || (entry.illust.file ? 'https://makoto-engawa.github.io/tsukuyomi-no-ishi/' + entry.illust.file : '')}" alt="${entry.illust.name}">
       <div class="illust-name">― ${entry.illust.name} ―</div>
     </div>` : `
     <div class="result-illust-wrap">
