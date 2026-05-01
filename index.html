@@ -1019,13 +1019,18 @@ function drawSankou(stones, todayPhase) {
 
 // ===== イラスト選定 =====
 function pickIllustration(phase) {
-  const illusts = loadIllusts();
+  var illusts = loadIllusts();
   if (illusts.length === 0) return null;
-  const matching = illusts.filter(i => i.phase === phase);
-  if (matching.length > 0) return matching[Math.floor(Math.random() * matching.length)];
-  const tagged = illusts.filter(i => i.phase);
-  if (tagged.length > 0) return tagged[Math.floor(Math.random() * tagged.length)];
-  return illusts[Math.floor(Math.random() * illusts.length)];
+  var matching = illusts.filter(function(i){ return i.phase === phase; });
+  var pool = matching.length > 0 ? matching : illusts.filter(function(i){ return i.phase; });
+  if (pool.length === 0) pool = illusts;
+  var item = pool[Math.floor(Math.random() * pool.length)];
+  if (!item) return null;
+  if (item.file && !item.data) {
+    var base = window.location.href.replace(/\/[^\/]*(\/)?$/, function(m,s){return s?m:'/';}).replace(/[^\/]*$/, '');
+    return Object.assign({}, item, { data: base + item.file });
+  }
+  return item;
 }
 
 // ===== UI状態 =====
