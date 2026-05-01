@@ -289,6 +289,23 @@ main { max-width: 800px; margin: 0 auto; padding: 1rem 1.5rem 4rem; }
   from { opacity: 0; transform: scale(1.05); filter: blur(20px); }
   to { opacity: 1; transform: scale(1); filter: blur(0); }
 }
+.result-rarity-badge {
+  position: absolute;
+  top: 10px; right: 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 3;
+  letter-spacing: 0.05em;
+}
+.result-rarity-C  { background: rgba(140,140,160,0.95); color: #fff; }
+.result-rarity-R  { background: rgba(212,168,80,0.95); color: #1a1612; }
+.result-rarity-SR { background: linear-gradient(90deg,#c084fc,#60a5fa,#34d399,#fbbf24,#f87171); color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.6); animation: srShine 3s ease-in-out infinite; }
+.result-rarity-UR { background: linear-gradient(135deg,#fff700,#ff6b6b,#4ecdc4); color: #1a1612; box-shadow: 0 0 14px rgba(255,255,255,0.9); animation: urGlow2 2s ease-in-out infinite; }
+@keyframes srShine { 0%,100%{opacity:0.9;} 50%{opacity:1; box-shadow:0 0 10px rgba(192,132,252,0.6);} }
+@keyframes urGlow2 { 0%,100%{box-shadow:0 0 8px rgba(255,255,255,0.6);} 50%{box-shadow:0 0 20px rgba(255,255,255,1);} }
 .illust-name {
   position: absolute; bottom: 1rem; left: 1rem; right: 1rem;
   color: var(--moon);
@@ -1296,10 +1313,12 @@ function showResult(entry) {
       <div class="ms">${f.s3}<span class="phase">${p3Info.symbol} ${f.p3}</span><div class="face">${f.f3}</div></div>`;
   }
   
+  const rarityBadge = entry.illust && entry.illust.rarity ? `<div class="result-rarity-badge result-rarity-${entry.illust.rarity}">${entry.illust.rarity}</div>` : '';
   const illustHtml = entry.illust ? `
     <div class="result-illust-wrap">
       <img class="result-illust" src="${entry.illust.data || (entry.illust.file ? 'https://makoto-engawa.github.io/tsukuyomi-no-ishi/' + entry.illust.file : '')}" alt="${entry.illust.name}">
       <div class="illust-name">― ${entry.illust.name} ―</div>
+      ${rarityBadge}
     </div>` : `
     <div class="result-illust-wrap">
       <div class="no-illust">
