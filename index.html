@@ -1061,9 +1061,10 @@ function pickIllustration(phase, isSR) {
   }
   var item=pool[Math.floor(Math.random()*pool.length)];
   if(!item) return null;
-  if(item.file&&!item.data){
-    var base=window.location.href.replace(/\/[^\/]*(\/)?$/, function(m,s){return s?m:'/';}).replace(/[^\/]*$/,'');
-    return Object.assign({},item,{data:base+item.file});
+  iff(item.file&&!item.data){
+    var url=item.file.indexOf('http')===0?item.file:('https://makoto-engawa.github.io/tsukuyomi-no-ishi/'+item.file);
+    return Object.assign({},item,{data:url});
+  }   return Object.assign({},item,{data:base+item.file});
   }
   return item;
 }
