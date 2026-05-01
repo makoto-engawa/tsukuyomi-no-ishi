@@ -1035,24 +1035,23 @@ function drawSankou(stones, todayPhase) {
 }
 
 // ===== イラスト選定 =====
-function pickIllustration(phase, mode, stones) {
+function pickIllustration(phase, isSR) {
   var illusts = loadIllusts();
   if (illusts.length === 0) return null;
-  var isSR = (mode === 'sankou' && phase === '満月' && stones && stones.length === 3);
   var pool;
   if (isSR) {
-    var srPool = illusts.filter(function(i){ return i.rarity === 'SR' && i.phase === '満月'; });
-    pool = srPool.length > 0 ? srPool : illusts.filter(function(i){ return i.phase === phase; });
+    var sr = illusts.filter(function(i){return i.rarity==='SR';});
+    pool = sr.length>0 ? sr : illusts.filter(function(i){return i.phase===phase;});
   } else {
-    var normal = illusts.filter(function(i){ return i.phase === phase && i.rarity !== 'SR' && i.rarity !== 'UR'; });
-    pool = normal.length > 0 ? normal : illusts.filter(function(i){ return i.rarity !== 'SR' && i.rarity !== 'UR'; });
-    if (pool.length === 0) pool = illusts;
+    var n = illusts.filter(function(i){return i.phase===phase&&i.rarity!=='SR'&&i.rarity!=='UR';});
+    pool = n.length>0 ? n : illusts.filter(function(i){return i.rarity!=='SR'&&i.rarity!=='UR';});
+    if(!pool.length) pool=illusts;
   }
-  var item = pool[Math.floor(Math.random() * pool.length)];
-  if (!item) return null;
-  if (item.file && !item.data) {
-    var base = window.location.href.replace(/\/[^\/]*(\/)?$/, function(m,s){return s?m:'/';}).replace(/[^\/]*$/,'');
-    return Object.assign({}, item, { data: base + item.file });
+  var item=pool[Math.floor(Math.random()*pool.length)];
+  if(!item) return null;
+  if(item.file&&!item.data){
+    var base=window.location.href.replace(/\/[^\/]*(\/)?$/, function(m,s){return s?m:'/';}).replace(/[^\/]*$/,'');
+    return Object.assign({},item,{data:base+item.file});
   }
   return item;
 }
@@ -1274,7 +1273,8 @@ function executeDraw() {
       fortune = drawSankou(selectedStones, todayPhase);
     }
     
-    const illust = pickIllustration(todayPhase, currentMode, selectedStones);
+    const isSankoMangetsu = (currentMode === 'sankou' && fortune.p1 === '満月' && fortune.p2 === '満月' && fortune.p3 === '満月');
+    const illust = pickIllustration(todayPhase, isSankoMangetsu);
     
     const entry = {
       date: new Date().toISOString(),
