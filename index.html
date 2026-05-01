@@ -1502,5 +1502,41 @@ window.addEventListener('DOMContentLoaded', async () => {
 
 </script>
 
+<style>
+#admin-reset-btn {
+  display: none;
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  background: rgba(80,40,120,0.85);
+  color: #f4ecd4;
+  border: 1px solid rgba(180,120,255,0.5);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  font-size: 1.3rem;
+  cursor: pointer;
+  box-shadow: 0 0 14px rgba(150,80,255,0.5);
+  align-items: center;
+  justify-content: center;
+}
+#admin-reset-btn:hover { background: rgba(110,60,180,0.95); }
+</style>
+<button id='admin-reset-btn' title='制限リセット（管理者専用）'>🔓</button>
+<script>
+if (window.location.search.includes('admin')) {
+  var btn = document.getElementById('admin-reset-btn');
+  btn.style.display = 'flex';
+  btn.addEventListener('click', function() {
+    var todayKey = new Date().toISOString().slice(0,10);
+    var prefix = 'tsukuyomi_drawn_' + todayKey;
+    var removed = Object.keys(localStorage).filter(function(k){ return k.startsWith(prefix); });
+    removed.forEach(function(k){ localStorage.removeItem(k); });
+    alert('✅ ' + removed.length + '件の制限をリセットしました！');
+    location.reload();
+  });
+}
+</script>
 </body>
 </html>
