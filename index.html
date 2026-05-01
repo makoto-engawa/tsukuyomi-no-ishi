@@ -1044,20 +1044,21 @@ function pickIllustration(phase, isSR) {
   if (illusts.length === 0) return null;
   var pool;
   if (isSR) {
-    var sr = illusts.filter(function(i){return i.rarity==='SR';});
+    var sr = illusts.filter(function(i){return i.rarity==="SR";});
     pool = sr.length>0 ? sr : illusts.filter(function(i){return i.phase===phase;});
   } else {
-    var n = illusts.filter(function(i){return i.phase===phase&&i.rarity!=='SR'&&i.rarity!=='UR';});
-    pool = n.length>0 ? n : illusts.filter(function(i){return i.rarity!=='SR'&&i.rarity!=='UR';});
+    var n = illusts.filter(function(i){return i.phase===phase&&i.rarity!=="SR"&&i.rarity!=="UR";});
+    pool = n.length>0 ? n : illusts.filter(function(i){return i.rarity!=="SR"&&i.rarity!=="UR";});
     if(!pool.length) pool=illusts;
   }
   var item=pool[Math.floor(Math.random()*pool.length)];
   if(!item) return null;
-  iff(item.file&&!item.data){
-    var url=item.file.indexOf('http')===0?item.file:('https://makoto-engawa.github.io/tsukuyomi-no-ishi/'+item.file);
+  if(item.file&&!item.data){
+    var url=item.file.indexOf("http")===0?item.file:("https://makoto-engawa.github.io/tsukuyomi-no-ishi/"+item.file);
     return Object.assign({},item,{data:url});
-  }   return Object.assign({},item,{data:base+item.file});
   }
+  return item;
+}
   return item;
 }
 
