@@ -1037,25 +1037,29 @@ function drawSankou(stones, todayPhase) {
 
 // ===== イラスト選定 =====
 function pickIllustration(phase, isSR) {
-  var illusts = loadIllusts();
+  if (typeof GITHUB_ILLUSTS !== "undefined" && GITHUB_ILLUSTS.length > 0) {
+    var illusts = GITHUB_ILLUSTS;
+  } else {
+    var illusts = _illustsCache || [];
+  }
   if (illusts.length === 0) return null;
   var pool;
   if (isSR) {
-    var sr = illusts.filter(function(i){return i.rarity==='SR';});
+    var sr = illusts.filter(function(i){return i.rarity==="SR";});
     pool = sr.length>0 ? sr : illusts.filter(function(i){return i.phase===phase;});
   } else {
-    var n = illusts.filter(function(i){return i.phase===phase&&i.rarity!=='SR'&&i.rarity!=='UR';});
-    pool = n.length>0 ? n : illusts.filter(function(i){return i.rarity!=='SR'&&i.rarity!=='UR';});
+    var n = illusts.filter(function(i){return i.phase===phase&&i.rarity!=="SR"&&i.rarity!=="UR";});
+    pool = n.length>0 ? n : illusts.filter(function(i){return i.rarity!=="SR"&&i.rarity!=="UR";});
     if(!pool.length) pool=illusts;
   }
   var item=pool[Math.floor(Math.random()*pool.length)];
   if(!item) return null;
-  iff(item.file&&!item.data){
-    var url=item.file.indexOf('http')===0?item.file:('https://makoto-engawa.github.io/tsukuyomi-no-ishi/'+item.file);
+  if(item.file){
+    var url=item.file.indexOf("http")===0?item.file:("https://makoto-engawa.github.io/tsukuyomi-no-ishi/"+item.file);
     return Object.assign({},item,{data:url});
-  }).replace(/[^\/]*$/,'');
-    return Object.assign({},item,{data:base+item.file});
   }
+  return item;
+}
   return item;
 }
 
@@ -1505,27 +1509,6 @@ window.addEventListener('DOMContentLoaded', async () => {
 
 </script>
 
-<style>
-#admin-reset-btn {
-  display: none; position: fixed; bottom: 24px; right: 24px; z-index: 9999;
-  background: rgba(80,40,120,0.85); color: #f4ecd4;
-  border: 1px solid rgba(180,120,255,0.5); border-radius: 50%;
-  width: 48px; height: 48px; font-size: 1.3rem; cursor: pointer;
-  box-shadow: 0 0 14px rgba(150,80,255,0.5); align-items: center; justify-content: center;
-}
-</style>
-<button id='admin-reset-btn'>🔓</button>
-<script>
-if(window.location.search.includes('admin')){
-  var btn=document.getElementById('admin-reset-btn');
-  btn.style.display='flex';
-  btn.addEventListener('click',function(){
-    var p='tsukuyomi_drawn_'+new Date().toISOString().slice(0,10);
-    var rm=Object.keys(localStorage).filter(function(k){return k.startsWith(p);});
-    rm.forEach(function(k){localStorage.removeItem(k);});
-    alert(rm.length+'件リセット完了！'); location.reload();
-  });
-}
-</script>
+<button id='arb' style='display:none;position:fixed;bottom:24px;right:24px;z-index:9999;background:rgba(80,40,120,0.85);color:#f4ecd4;border:1px solid rgba(180,120,255,0.5);border-radius:50%;width:48px;height:48px;font-size:1.3rem;cursor:pointer;'>🔒</button><script>if(window.location.search.includes('admin')){var b=document.getElementById('arb');b.style.display='flex';b.style.alignItems='center';b.style.justifyContent='center';b.addEventListener('click',function(){var p='tsukuyomi_drawn_'+new Date().toISOString().slice(0,10);var rm=Object.keys(localStorage).filter(function(k){return k.startsWith(p);});rm.forEach(function(k){localStorage.removeItem(k);});alert(rm.length+'件リセット！');location.reload();});}</script>
 </body>
 </html>
