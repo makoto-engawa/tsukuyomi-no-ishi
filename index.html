@@ -966,7 +966,7 @@ function loadIllusts() {
 // 起動時にイラストをキャッシュへロード
 async function initIllusts() {
   _illustsCache = await loadIllustsAsync();
-  console.log(`イラスト ${_illustsCache.length}枚 を読み込みました`);
+  if (typeof GITHUB_ILLUSTS !== 'undefined' && GITHUB_ILLUSTS.length > 0) { _illustsCache = GITHUB_ILLUSTS; }
 }
 
 function getTodayKey() {
