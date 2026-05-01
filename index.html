@@ -1049,7 +1049,11 @@ function pickIllustration(phase, isSR) {
   }
   var item=pool[Math.floor(Math.random()*pool.length)];
   if(!item) return null;
-  if(item.file){ var url=item.file.indexOf("http")===0?item.file:("https://makoto-engawa.github.io/tsukuyomi-no-ishi/"+item.file); return Object.assign({},item,{data:url}); }  return item;
+  if(item.file){ var url=item.file.indexOf("http")===0?item.file:("https://makoto-engawa.github.io/tsukuyomi-no-ishi/"+item.file); return Object.assign({},item,{data:url}); } return item;
+  // (replaced)
+  // (replaced)
+  // (replaced)
+  return item;
 }
 
 // ===== UI状態 =====
