@@ -964,7 +964,7 @@ function loadIllusts() {
 // 起動時にイラストをキャッシュへロード
 async function initIllusts() {
   _illustsCache = await loadIllustsAsync();
-
+  console.log(`イラスト ${_illustsCache.length}枚 を読み込みました`);
 }
 
 function getTodayKey() {
