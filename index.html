@@ -976,7 +976,7 @@ async function loadIllustsAsync() {
 }
 
 // 同期API（キャッシュ済みデータを返す）
-function loadIllusts() {
+function loadIllusts() { if (typeof GITHUB_ILLUSTS !== "undefined" && GITHUB_ILLUSTS.length > 0) return GITHUB_ILLUSTS; return _illustsCache || []; }
   return _illustsCache || [];
 }
 
@@ -1049,7 +1049,7 @@ function pickIllustration(phase, isSR) {
   }
   var item=pool[Math.floor(Math.random()*pool.length)];
   if(!item) return null;
-  if(item.file&&!item.data){
+  if(item.file){ var url=item.file.indexOf("http")===0?item.file:("https://makoto-engawa.github.io/tsukuyomi-no-ishi/"+item.file); return Object.assign({},item,{data:url}); }  return item;
     var base=window.location.href.replace(/\/[^\/]*(\/)?$/, function(m,s){return s?m:'/';}).replace(/[^\/]*$/,'');
     return Object.assign({},item,{data:base+item.file});
   }
