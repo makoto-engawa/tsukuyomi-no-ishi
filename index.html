@@ -6,6 +6,9 @@
 (function(){
   var s=document.createElement("script");
   s.src="illust_data.js?v="+Date.now();
+  s.onload=function(){
+    if(typeof initIllusts === 'function') initIllusts();
+  };
   document.head.appendChild(s);
 })();
 </script>
@@ -988,8 +991,11 @@ function loadIllusts() {
 
 // 起動時にイラストをキャッシュへロード
 async function initIllusts() {
-  _illustsCache = await loadIllustsAsync();
-  if (typeof GITHUB_ILLUSTS !== 'undefined' && GITHUB_ILLUSTS.length > 0) { _illustsCache = GITHUB_ILLUSTS; }
+  if (typeof GITHUB_ILLUSTS !== 'undefined' && GITHUB_ILLUSTS.length > 0) {
+    _illustsCache = GITHUB_ILLUSTS;
+  } else {
+    _illustsCache = await loadIllustsAsync();
+  }
 }
 
 function getTodayKey() {
