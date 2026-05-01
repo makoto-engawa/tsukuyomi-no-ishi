@@ -2,16 +2,7 @@
 <html lang="ja">
 <head>
 <script>var GITHUB_ILLUSTS = [];</script>
-<script>
-(function(){
-  var s=document.createElement("script");
-  s.src="illust_data.js?v="+Date.now();
-  s.onload=function(){
-    if(typeof initIllusts === 'function') initIllusts();
-  };
-  document.head.appendChild(s);
-})();
-</script>
+<script src="illust_data.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>月読の石 — 月暦占い</title>
@@ -986,6 +977,7 @@ async function loadIllustsAsync() {
 
 // 同期API（キャッシュ済みデータを返す）
 function loadIllusts() {
+  if (typeof GITHUB_ILLUSTS !== "undefined" && GITHUB_ILLUSTS.length > 0) return GITHUB_ILLUSTS;
   return _illustsCache || [];
 }
 
