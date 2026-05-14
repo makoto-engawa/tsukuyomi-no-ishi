@@ -6,6 +6,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>月読の石 — 月暦占い</title>
+<meta name="description" content="月読命の沈黙を、五つの石が代弁する。月相と石が紡ぐ、あなただけの日々の導き。毎朝の月暦占い。">
+<meta property="og:title" content="月読の石 — 月暦占い">
+<meta property="og:description" content="月の満ち欠けと共に。毎朝の占いとカードコレクションの旅。">
+<meta property="og:image" content="https://makoto-engawa.github.io/tsukuyomi-no-ishi/ogp.png">
+<meta property="og:url" content="https://makoto-engawa.github.io/tsukuyomi-no-ishi/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="月読の石">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="月読の石 — 月暦占い">
+<meta name="twitter:description" content="月の満ち欠けと共に。毎朝の占いとカードコレクションの旅。">
+<meta name="twitter:image" content="https://makoto-engawa.github.io/tsukuyomi-no-ishi/ogp.png">
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Klee+One:wght@400;600&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -1351,11 +1363,15 @@ function showResult(entry) {
     <div class="result-mind">${f.m}</div>
     ${illustInfoHtml}
     <div class="result-actions">
+      <button class="result-btn share-btn" id="shareXBtn" title="Xでシェア">𝕏 シェア</button>
+      <button class="result-btn share-btn" id="shareLineBtn" title="LINEでシェア">LINE</button>
+      <button class="result-btn share-btn" id="copyLinkBtn" title="リンクをコピー">🔗 コピー</button>
+      <a class="result-btn share-btn" href="https://www.tiktok.com/@kai391909" target="_blank" rel="noopener noreferrer" title="TikTokをフォロー">📱 TikTok</a>
       ${entry.illust ? '<button class="result-btn" id="downloadBtn">画像を保存</button>' : ''}
       <button class="result-btn primary" id="closeResultBtn">閉じる</button>
     </div>
   `;
-  
+
   document.getElementById('resultOverlay').classList.add('show');
   document.getElementById('closeResultBtn').addEventListener('click', () => {
     document.getElementById('resultOverlay').classList.remove('show');
@@ -1363,6 +1379,41 @@ function showResult(entry) {
   if (entry.illust) {
     document.getElementById('downloadBtn').addEventListener('click', () => downloadResult(entry));
   }
+
+  // シェア機能
+  const SHARE_URL = 'https://makoto-engawa.github.io/tsukuyomi-no-ishi/';
+  const phaseName = entry.todayPhase || '';
+  const stoneNames = (entry.stones || []).join('・');
+  const fortuneTitle = (entry.illust && entry.illust.name) ? entry.illust.name : '';
+  const shareLines = ['🌙 今日の月読の石'];
+  if (phaseName) shareLines.push(`月相: ${phaseName}`);
+  if (stoneNames) shareLines.push(`石: ${stoneNames}`);
+  if (fortuneTitle) shareLines.push(`― ${fortuneTitle} ―`);
+  if (f.m) shareLines.push(f.m);
+  const shareText = shareLines.join('\n');
+
+  document.getElementById('shareXBtn').addEventListener('click', () => {
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText + '\n')}&url=${encodeURIComponent(SHARE_URL)}&hashtags=${encodeURIComponent('月読の石,月暦占い')}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
+  });
+
+  document.getElementById('shareLineBtn').addEventListener('click', () => {
+    const url = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(SHARE_URL)}&text=${encodeURIComponent(shareText)}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
+  });
+
+  document.getElementById('copyLinkBtn').addEventListener('click', async () => {
+    const btn = document.getElementById('copyLinkBtn');
+    const orig = btn.textContent;
+    try {
+      await navigator.clipboard.writeText(`${shareText}\n${SHARE_URL}`);
+      btn.textContent = '✓ コピー完了';
+      setTimeout(() => { btn.textContent = orig; }, 1500);
+    } catch(e) {
+      btn.textContent = 'コピー失敗';
+      setTimeout(() => { btn.textContent = orig; }, 1500);
+    }
+  });
 }
 
 async function downloadResult(entry) {
