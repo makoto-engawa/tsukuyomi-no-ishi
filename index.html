@@ -1684,6 +1684,20 @@ window.addEventListener('DOMContentLoaded', async () => {
           +'<img class="result-illust" src="'+src+'" alt="'+(ill.name||'')+'">'
           +'<div class="illust-name">― '+(ill.name||'')+' ―</div>'+rb+'</div>';
       }
+      try{
+        if(typeof addToCollection==='function'){
+          addToCollection({
+            date:new Date().toISOString(),
+            dateKey:(typeof getTodayKey==='function'?getTodayKey():''),
+            mode:'sankou',
+            modeName:'誕生日占い',
+            stones:[e.s1,e.s2,e.s3],
+            todayPhase:pr,
+            fortune:e,
+            illust:ill||null
+          });
+        }
+      }catch(err4){}
       var ms='';
       for(var i=1;i<=3;i++){ ms+='<div class="ms">'+e['s'+i]+'<span class="phase">'+sym(e['p'+i])+' '+e['p'+i]+'</span><div class="face">'+e['f'+i]+'</div></div>'; }
       out.innerHTML=
