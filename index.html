@@ -792,7 +792,6 @@ main { max-width: 800px; margin: 0 auto; padding: 1rem 1.5rem 4rem; }
 
 <nav>
   <button class="nav-btn active" data-page="divine">占う</button>
-  <button class="nav-btn" data-page="birth">誕生</button>
   <button class="nav-btn" data-page="collection">月暦</button>
   <button class="nav-btn" data-page="stones">石の解</button>
   <button class="nav-btn" data-page="about">由来</button>
@@ -814,6 +813,10 @@ main { max-width: 800px; margin: 0 auto; padding: 1rem 1.5rem 4rem; }
         <div class="mode-name">三石占い</div>
         <div class="mode-desc">石を3つ選ぶ</div>
       </button>
+      <button class="mode-btn" data-mode="birth">
+        <div class="mode-name">誕生日占い</div>
+        <div class="mode-desc">生年月日で占う</div>
+      </button>
     </div>
 
     <div class="divination-stage">
@@ -834,15 +837,8 @@ main { max-width: 800px; margin: 0 auto; padding: 1rem 1.5rem 4rem; }
         毎日異なる占いをお楽しみください。
       </div>
     </div>
-  </div>
 
-  <!-- 誕生 -->
-  <div class="page" id="page-birth">
-    <div class="collection-header">
-      <div class="collection-title">誕 生 の 刻</div>
-      <div class="collection-stats">あなたが生まれた夜、月読命は三つの石を選んだ</div>
-    </div>
-    <div class="divination-stage">
+    <div id="birthBox" style="display:none;">
       <div class="divination-prompt">生年月日を入力したまえ</div>
       <div style="display:flex;gap:.5rem;justify-content:center;align-items:center;flex-wrap:wrap;margin:1.2rem 0;">
         <input id="birthY" type="number" inputmode="numeric" placeholder="年" min="1900" max="2100" style="width:5.5rem;padding:.6rem;text-align:center;background:rgba(13,10,20,.6);color:var(--moon,#f4ecd4);border:1px solid var(--gold,#b8924a);border-radius:4px;font-family:inherit;font-size:1rem;">
@@ -856,7 +852,7 @@ main { max-width: 800px; margin: 0 auto; padding: 1rem 1.5rem 4rem; }
       <div id="birthResult" style="margin-top:1.5rem;"></div>
       <div class="notice">
         ※ 生まれた夜の月相は天文計算で求めています。<br>
-        月読命がその夜あなたに与えた三柱の石と言葉を、二千百六十の啓示より読み解きます。
+        月読命が二千百六十の啓示より、三柱の石と言葉を読み解きます。
       </div>
     </div>
   </div>
@@ -1225,6 +1221,14 @@ function updateStonesUI() {
 }
 
 function setMode(mode) {
+  if (mode === 'birth') {
+    document.querySelectorAll('.mode-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.mode === 'birth'); });
+    var _ds = document.querySelector('.divination-stage'); if (_ds) _ds.style.display = 'none';
+    var _bb = document.getElementById('birthBox'); if (_bb) _bb.style.display = 'block';
+    return;
+  }
+  var _bb0 = document.getElementById('birthBox'); if (_bb0) _bb0.style.display = 'none';
+  var _ds0 = document.querySelector('.divination-stage'); if (_ds0) _ds0.style.display = '';
   currentMode = mode;
   selectedStones = [];
   document.querySelectorAll('.mode-btn').forEach(btn => {
@@ -1659,31 +1663,50 @@ window.addEventListener('DOMContentLoaded', async () => {
     if(!y||!m||!d||m<1||m>12||d<1||d>31||y<1900||y>2100){
       out.innerHTML='<div class="notice">― 正しい生年月日を入力してください ―</div>'; return;
     }
-    var bd=new Date(Date.UTC(y,m-1,d,12,0,0));
-    var st=pickStones(y,m,d), ph=pickPhases(y,m,d,bd), e=lookup(st,ph);
-    if(!e){ out.innerHTML='<div class="notice">― 月が応えませんでした。もう一度。 ―</div>'; return; }
-    var age=moonAge(bd), lit=illum(age), pr=ph[0];
-    var ms='';
-    for(var i=1;i<=3;i++){ ms+='<div class="ms">'+e['s'+i]+'<span class="phase">'+sym(e['p'+i])+' '+e['p'+i]+'</span><div class="face">'+e['f'+i]+'</div></div>'; }
-    out.innerHTML=
-      '<div class="result-card" style="position:relative;">'
-      +'<div class="about-title" style="text-align:center;">月読命が遺した三柱の言葉</div>'
-      +'<div style="text-align:center;opacity:.7;font-size:.78rem;letter-spacing:.18em;margin:.4rem 0 1.1rem;">'
-        +y+'年'+m+'月'+d+'日生 ／ 生まれの月相 '+sym(pr)+' '+pr+' ／ 月齢'+age.toFixed(1)+'日（'+lit+'%）</div>'
-      +'<div style="display:flex;flex-direction:column;gap:.6rem;align-items:center;">'+ms+'</div>'
-      +'<p class="about-text" style="margin-top:1.2rem;">'+(e.t||'')+'</p>'
-      +'<div style="text-align:center;color:var(--gold,#b8924a);letter-spacing:.12em;margin-top:1rem;">― '+(e.m||'')+' ―</div>'
-      +'<div style="text-align:center;margin-top:1.5rem;">'
-        +'<button class="draw-button" id="birthShareX" style="display:inline-block;width:auto;padding:.55rem 1.3rem;margin:.3rem;">Xで分かち合う</button>'
-        +'<button class="draw-button" id="birthCopy" style="display:inline-block;width:auto;padding:.55rem 1.3rem;margin:.3rem;">言葉をコピー</button>'
-      +'</div></div>';
-    var URL='https://tsukuyomi-ishi.github.io/tsukuyomi-no-ishi/';
-    var txt='【月読の石・誕生の刻】\n私の三柱の石 ― '+e.s1+'・'+e.s2+'・'+e.s3+'\n生まれの月相 ― '+pr+'（月齢'+age.toFixed(1)+'日）\n「'+(e.m||'')+'」';
-    var bx=document.getElementById('birthShareX');
-    if(bx) bx.addEventListener('click',function(){ window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(txt+'\n')+'&url='+encodeURIComponent(URL)+'&hashtags='+encodeURIComponent('月読の石,誕生の刻'),'_blank','noopener'); });
-    var bc=document.getElementById('birthCopy');
-    if(bc) bc.addEventListener('click',function(){ try{ navigator.clipboard.writeText(txt+'\n'+URL); bc.textContent='コピーしました'; }catch(e){} });
-    try{ if(typeof gtag==='function'){ gtag('event','birth_reading',{ stones:e.s1+'・'+e.s2+'・'+e.s3, birth_phase:pr, phases:e.p1+'/'+e.p2+'/'+e.p3, birth_year:y }); } }catch(e){}
+    var loader=document.getElementById('moonLoader');
+    var ltxt=document.getElementById('loaderText');
+    if(ltxt) ltxt.textContent='月 が あ な た の 生 ま れ を 読 む';
+    if(loader) loader.classList.add('show');
+    setTimeout(function(){
+      var bd=new Date(Date.UTC(y,m-1,d,12,0,0));
+      var st=pickStones(y,m,d), ph=pickPhases(y,m,d,bd), e=lookup(st,ph);
+      if(loader) loader.classList.remove('show');
+      if(!e){ out.innerHTML='<div class="notice">― 月が応えませんでした。もう一度。 ―</div>'; return; }
+      var age=moonAge(bd), lit=illum(age), pr=ph[0];
+      var isSR=(ph[0]==='満月'&&ph[1]==='満月'&&ph[2]==='満月');
+      var ill=null;
+      try{ if(typeof pickIllustration==='function'){ ill=pickIllustration(pr,isSR); } }catch(err){}
+      var illHtml='';
+      if(ill && (ill.data||ill.file)){
+        var src=ill.data||ill.file;
+        var rb=ill.rarity?'<div class="result-rarity-badge result-rarity-'+ill.rarity+'">'+ill.rarity+'</div>':'';
+        illHtml='<div class="result-illust-wrap" style="position:relative;margin:1rem auto;">'
+          +'<img class="result-illust" src="'+src+'" alt="'+(ill.name||'')+'">'
+          +'<div class="illust-name">― '+(ill.name||'')+' ―</div>'+rb+'</div>';
+      }
+      var ms='';
+      for(var i=1;i<=3;i++){ ms+='<div class="ms">'+e['s'+i]+'<span class="phase">'+sym(e['p'+i])+' '+e['p'+i]+'</span><div class="face">'+e['f'+i]+'</div></div>'; }
+      out.innerHTML=
+        '<div class="result-card" style="position:relative;">'
+        +'<div class="about-title" style="text-align:center;">月読命が遺した三柱の言葉</div>'
+        +'<div style="text-align:center;opacity:.7;font-size:.78rem;letter-spacing:.18em;margin:.4rem 0 1rem;">'
+          +y+'年'+m+'月'+d+'日生 ／ 生まれの月相 '+sym(pr)+' '+pr+' ／ 月齢'+age.toFixed(1)+'日（'+lit+'%）</div>'
+        +illHtml
+        +'<div style="display:flex;flex-direction:column;gap:.6rem;align-items:center;margin-top:1rem;">'+ms+'</div>'
+        +'<p class="about-text" style="margin-top:1.2rem;">'+(e.t||'')+'</p>'
+        +'<div style="text-align:center;color:var(--gold,#b8924a);letter-spacing:.12em;margin-top:1rem;">― '+(e.m||'')+' ―</div>'
+        +'<div style="text-align:center;margin-top:1.5rem;">'
+          +'<button class="draw-button" id="birthShareX" style="display:inline-block;width:auto;padding:.55rem 1.3rem;margin:.3rem;">Xで分かち合う</button>'
+          +'<button class="draw-button" id="birthCopy" style="display:inline-block;width:auto;padding:.55rem 1.3rem;margin:.3rem;">言葉をコピー</button>'
+        +'</div></div>';
+      var URL='https://tsukuyomi-ishi.github.io/tsukuyomi-no-ishi/';
+      var txt='【月読の石・誕生の刻】\n私の三柱の石 ― '+e.s1+'・'+e.s2+'・'+e.s3+'\n生まれの月相 ― '+pr+'（月齢'+age.toFixed(1)+'日）\n「'+(e.m||'')+'」';
+      var bx=document.getElementById('birthShareX');
+      if(bx) bx.addEventListener('click',function(){ window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(txt+'\n')+'&url='+encodeURIComponent(URL)+'&hashtags='+encodeURIComponent('月読の石,誕生の刻'),'_blank','noopener'); });
+      var bc=document.getElementById('birthCopy');
+      if(bc) bc.addEventListener('click',function(){ try{ navigator.clipboard.writeText(txt+'\n'+URL); bc.textContent='コピーしました'; }catch(err2){} });
+      try{ if(typeof gtag==='function'){ gtag('event','birth_reading',{ stones:e.s1+'・'+e.s2+'・'+e.s3, birth_phase:pr, phases:e.p1+'/'+e.p2+'/'+e.p3, birth_year:y, rarity:(ill&&ill.rarity)?ill.rarity:'none' }); } }catch(err3){}
+    },2500);
   }
 
   function init(){
