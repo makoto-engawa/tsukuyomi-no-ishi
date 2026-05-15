@@ -1756,8 +1756,12 @@ window.addEventListener('DOMContentLoaded', async () => {
 /* === 開発用テストリセット（URLに dev を含む時のみ表示・既存非干渉） === */
 (function(){
   try{
-    var q=(location.search||'')+(location.hash||'');
-    if(q.indexOf('dev')<0) return;
+    var _hasDev=false;
+    try{
+      _hasDev = new URLSearchParams(location.search).has('dev')
+             || new URLSearchParams((location.hash||'').replace(/^#/,'')).has('dev');
+    }catch(e){ _hasDev = /[?&#]dev(=|&|$)/.test((location.search||'')+(location.hash||'')); }
+    if(!_hasDev) return;
     function clearTest(){
       try{
         localStorage.removeItem('tsukuyomi_birth_stocked');
