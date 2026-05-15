@@ -1309,6 +1309,20 @@ function executeDraw() {
     
     addToCollection(entry);
     markDrawn(currentMode);
+
+    try {
+      if (typeof gtag === 'function') {
+        gtag('event', 'fortune_reading', {
+          mode: entry.mode,
+          mode_name: entry.modeName,
+          stone_count: entry.stones.length,
+          stones: entry.stones.join('・'),
+          moon_phase: entry.todayPhase,
+          rarity: (entry.illust && entry.illust.rarity) ? entry.illust.rarity : 'none',
+          is_sr_mangetsu: isSankoMangetsu
+        });
+      }
+    } catch (e) {}
     
     loader.classList.remove('show');
     showResult(entry);
