@@ -1752,5 +1752,41 @@ window.addEventListener('DOMContentLoaded', async () => {
 })();
 </script>
 
+<script>
+/* === 開発用テストリセット（URLに dev を含む時のみ表示・既存非干渉） === */
+(function(){
+  try{
+    var q=(location.search||'')+(location.hash||'');
+    if(q.indexOf('dev')<0) return;
+    function clearTest(){
+      try{
+        localStorage.removeItem('tsukuyomi_birth_stocked');
+        var rm=[];
+        for(var i=0;i<localStorage.length;i++){ var k=localStorage.key(i); if(k && k.indexOf('tsukuyomi_drawn_')===0) rm.push(k); }
+        for(var j=0;j<rm.length;j++){ localStorage.removeItem(rm[j]); }
+        return rm.length;
+      }catch(e){ return -1; }
+    }
+    function mount(){
+      if(document.getElementById('__devReset')) return;
+      var btn=document.createElement('button');
+      btn.id='__devReset';
+      btn.textContent='🔧 テストリセット';
+      btn.setAttribute('style','position:fixed;left:10px;bottom:10px;z-index:99999;background:rgba(184,146,74,.92);color:#1a1612;border:none;border-radius:6px;padding:.5rem .8rem;font-size:.78rem;font-family:inherit;letter-spacing:.05em;cursor:pointer;opacity:.55;box-shadow:0 2px 8px rgba(0,0,0,.4);');
+      btn.addEventListener('mouseover',function(){ btn.style.opacity='1'; });
+      btn.addEventListener('mouseout',function(){ btn.style.opacity='.55'; });
+      btn.addEventListener('click',function(){
+        if(!confirm('テスト用：誕生日占いの初回ストック制限と本日の引き済みロックを解除します。よろしいですか？')) return;
+        var n=clearTest();
+        alert(n<0?'解除に失敗しました':('解除しました（引き済みロック'+n+'件＋誕生ストック制限）。再読み込みします。'));
+        location.reload();
+      });
+      document.body.appendChild(btn);
+    }
+    if(document.body){ mount(); } else { document.addEventListener('DOMContentLoaded',mount); }
+  }catch(e){}
+})();
+</script>
+
 </body>
 </html>
