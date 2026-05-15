@@ -1,5 +1,32 @@
 var GITHUB_ILLUSTS = [
   {
+    "id": "illust_1778846925100_g3jkfe",
+    "name": "掬月",
+    "reading": "きくげつ",
+    "phase": "満月",
+    "description": "月の満ちる夜、水辺に身をかがめ、灯籠の光に咲く白蓮へ静かに桶を差しのべる影。すくった水のおもてに、満月がまるごと宿る。\n\n求めしものは、遠くにあらず。満ちた月は、低くかがむ者の手のひらにこそ降りてくる ― 満月の象意「成就」を、奪うのではなく受けとる所作として描く。\n\n掬った水は、いつか指の間をこぼれる。実りを手にした夜こそ、静かに。",
+    "file": "https://tsukuyomi-ishi.github.io/tsukuyomi-no-ishi/images/illust_1778846925100_g3jkfe.jpg",
+    "rarity": "R"
+  },
+  {
+    "id": "illust_1778846925200_c36wsm",
+    "name": "翔月",
+    "reading": "しょうげつ",
+    "phase": "上弦の月",
+    "description": "墨の雲を巻き上げ、髪を逆巻かせて立ちのぼる影。眼下には鳥居と社の甍、頭上にはまだ満ちぬ月。嵐のただなかで、姿が形を得てゆく。\n\nまだ満ちぬ月は、欠けているのではない。これから満ちる力そのもの ― 上弦の象意「上昇」を、静止ではなく渦巻く生成として描く。\n\n昇る途中の者に、完成を問うてはならない。風が止む前の、その勢いを信じよ。",
+    "file": "https://tsukuyomi-ishi.github.io/tsukuyomi-no-ishi/images/illust_1778846925200_c36wsm.jpg",
+    "rarity": "R"
+  },
+  {
+    "id": "illust_1778846925300_g48g5d",
+    "name": "無相満月",
+    "reading": "むそうまんげつ",
+    "phase": "満月",
+    "description": "満ちた月を背に、目を閉じて立つ影。そのまわりに、いくつもの面影が霞のように生まれては消える。男にも、女にも、誰にも定まらぬ顔。\n\n満ちるとは、ひとつに固まることではない ― 満月の象意「成就」を、輪郭を持たぬ神の在りようとして描く。語られぬ神は、すべての顔を持つ。\n\nどの面影が真かと問うな。問わぬまま見つめる者にだけ、月は応える。",
+    "file": "https://tsukuyomi-ishi.github.io/tsukuyomi-no-ishi/images/illust_1778846925300_g48g5d.jpg",
+    "rarity": "R"
+  },
+  {
     "id": "illust_1777596936630_ldk5et",
     "name": "崖上望月",
     "reading": "がいじょうぼうげつ",
