@@ -1675,7 +1675,25 @@ window.addEventListener('DOMContentLoaded', async () => {
       var age=moonAge(bd), lit=illum(age), pr=ph[0];
       var isSR=(ph[0]==='満月'&&ph[1]==='満月'&&ph[2]==='満月');
       var ill=null;
-      try{ if(typeof pickIllustration==='function'){ ill=pickIllustration(pr,isSR); } }catch(err){}
+      try{
+        var _seed=Math.abs(y*10000+m*100+d);
+        if(typeof loadIllusts==='function'){
+          var _all=loadIllusts()||[], _pool;
+          if(isSR){
+            var _sr=_all.filter(function(z){return z.rarity==='SR';});
+            _pool=_sr.length?_sr:_all.filter(function(z){return z.phase===pr;});
+          }else{
+            var _n=_all.filter(function(z){return z.phase===pr&&z.rarity!=='SR'&&z.rarity!=='UR';});
+            _pool=_n.length?_n:_all.filter(function(z){return z.rarity!=='SR'&&z.rarity!=='UR';});
+            if(!_pool.length)_pool=_all;
+          }
+          if(_pool.length){
+            var _it=_pool[_seed%_pool.length];
+            if(_it){ if(_it.file&&!_it.data){ var _o={}; for(var _k in _it)_o[_k]=_it[_k]; _o.data=_it.file; ill=_o; } else { ill=_it; } }
+          }
+        }
+        if(!ill && typeof pickIllustration==='function'){ ill=pickIllustration(pr,isSR); }
+      }catch(err){ try{ if(typeof pickIllustration==='function') ill=pickIllustration(pr,isSR); }catch(e9){} }
       var illHtml='';
       if(ill && (ill.data||ill.file)){
         var src=ill.data||ill.file;
@@ -1685,7 +1703,9 @@ window.addEventListener('DOMContentLoaded', async () => {
           +'<div class="illust-name">― '+(ill.name||'')+' ―</div>'+rb+'</div>';
       }
       try{
-        if(typeof addToCollection==='function'){
+        var _stocked=false;
+        try{ _stocked=!!localStorage.getItem('tsukuyomi_birth_stocked'); }catch(e8){}
+        if(typeof addToCollection==='function' && !_stocked){
           addToCollection({
             date:new Date().toISOString(),
             dateKey:(typeof getTodayKey==='function'?getTodayKey():''),
@@ -1696,6 +1716,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             fortune:e,
             illust:ill||null
           });
+          try{ localStorage.setItem('tsukuyomi_birth_stocked','1'); }catch(e7){}
         }
       }catch(err4){}
       var ms='';
